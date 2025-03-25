@@ -1,110 +1,5 @@
-// import React from 'react';
-
-// const Registro = () => {
-//   return (
-    
-//     <div className="m-10  h-screen flex items-center justify-center">
-//       <div className="shadow-lg bg-[#132D46] text-white w-96 p-6 rounded-lg shadow-lg">
-//         <h1 className="text-3xl text-center font-bold mb-4">Crea una cuenta</h1>
-//         <h1 className="text-base text-center font-bold mb-4">Es rápido y fácil</h1>
-//         <hr />
-//         <br />
-//         <form>
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">person</span>
-//             <input 
-//               type="text" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Nombre"
-//             />
-//           </div>
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">person</span>
-//             <input 
-//               type="text" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Apellido"
-//             />
-//           </div>
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">location_on</span>
-//             <input 
-//               type="text" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="País"
-//             />
-//           </div>
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">location_on</span>
-//             <input 
-//               type="text" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Ciudad"
-//             />
-//           </div>
-          
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">location_on</span>
-//             <input 
-//               type="text" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Dirección"
-//             />
-//           </div>
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">location_on</span>
-//             <input 
-//               type="text" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Código postal"
-//             />
-//           </div>
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">phone</span>
-//             <input 
-//               type="text" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Teléfono"
-//             />
-//           </div>
-          
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">email</span>
-//             <input 
-//               type="email" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Email"
-//             />
-//           </div>
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">lock</span>
-//             <input 
-//               type="password" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Contraseña"
-//             />
-//           </div>
-//           <div className="mb-4 flex items-center">
-//             <span className="material-icons mr-2">lock</span>
-//             <input 
-//               type="password" 
-//               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400" 
-//               placeholder="Confirmar contraseña"
-//             />
-//           </div>
-//           <button 
-//             type="submit" 
-//             className="w-full bg-[#01C38E] text-white p-2 rounded-md hover:bg-teal-600">
-//             Registrame
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Registro;
 import React, { useState } from 'react';
+import { registerUser } from '../api/registerUser'; // Importa la función de la API
 
 const Registro = () => {
   const [formData, setFormData] = useState({
@@ -121,6 +16,7 @@ const Registro = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -137,12 +33,12 @@ const Registro = () => {
         break;
       }
       case 'telefono': {
-        const phoneRegex = /^\+\d+$/; // Debe empezar con "+" y solo contener números
+        const phoneRegex = /^\+\d+$/;
         if (!phoneRegex.test(value)) error = 'El teléfono debe de tener prefijo.';
         break;
       }
       case 'password': {
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/; // Al menos 8 caracteres, una mayúscula y un carácter especial
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
         if (!passwordRegex.test(value)) {
           error = 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un carácter especial.';
         }
@@ -164,12 +60,22 @@ const Registro = () => {
     setErrors({ ...errors, [name]: error });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formIsValid = Object.keys(errors).every((key) => !errors[key]); // Sin errores
     if (formIsValid) {
-      alert('Formulario enviado correctamente');
-      console.log('Datos del formulario:', formData);
+      setLoading(true);
+      try {
+        const response = await registerUser(formData); // Llama a la API
+        alert('Usuario registrado correctamente');
+        console.log('Respuesta de la API:', response);
+        window.location.href = '/';
+      } catch (error) {
+        console.error('Error al registrar usuario:', error);
+        alert('Hubo un error al registrar el usuario.');
+      } finally {
+        setLoading(false);
+      }
     } else {
       alert('Por favor corrige los errores antes de enviar.');
     }
@@ -177,7 +83,7 @@ const Registro = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="shadow-lg bg-[#132D46] text-white w-full max-w-md p-6 rounded-lg">
+      <div className="shadow-lg bg-[#132D46] text-white w-full max-w-md p-6 rounded-lg"></div>
         <h1 className="text-3xl text-center font-bold mb-4">Crea una cuenta</h1>
         <h1 className="text-base text-center font-bold mb-4">Es rápido y fácil</h1>
         <hr />
@@ -266,12 +172,14 @@ const Registro = () => {
           <button
             type="submit"
             className="w-full bg-[#01C38E] text-white p-2 rounded-md hover:bg-teal-600"
+            disabled={loading}
           >
-            Registrarme
+            {loading ? 'Registrando...' : 'Registrarme'}
           </button>
         </form>
+        
       </div>
-    </div>
+  
   );
 };
 
