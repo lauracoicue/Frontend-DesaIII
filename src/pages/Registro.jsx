@@ -3,6 +3,7 @@ import { registerUser } from '../api/registerUser'; // Importa la función de la
 
 const Registro = () => {
   const [formData, setFormData] = useState({
+    cedula: '',
     nombre: '',
     apellido: '',
     pais: '',
@@ -12,21 +13,30 @@ const Registro = () => {
     telefono: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    rol: 'EMPLEADO'
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    validateField(name, value);
+    if (name === 'confirmPassword') {
+      setConfirmPassword(value);
+      validateField(name, value);
+    } else {
+      setFormData({ ...formData, [name]: value });
+      validateField(name, value);
+    }
   };
 
   const validateField = (name, value) => {
     let error = '';
     switch (name) {
+      case 'cedula':
+        if (!/^\d+$/.test(value)) error = 'La cédula debe contener solo números.';
+        break;
       case 'email': {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) error = 'Correo no válido.';
@@ -63,7 +73,7 @@ const Registro = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formIsValid = Object.keys(errors).every((key) => !errors[key]); // Sin errores
-    if (formIsValid) {
+    if (formIsValid && confirmPassword === formData.password) {
       setLoading(true);
       try {
         const response = await registerUser(formData); // Llama a la API
@@ -82,14 +92,15 @@ const Registro = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="shadow-lg bg-[#132D46] text-white w-full max-w-md p-6 rounded-lg"></div>
+    <div className="min-h-screen flex items-center justify-center ">
+      <div className="shadow-lg bg-[#132D46] text-white w-full max-w-md p-6 rounded-lg">
         <h1 className="text-3xl text-center font-bold mb-4">Crea una cuenta</h1>
         <h1 className="text-base text-center font-bold mb-4">Es rápido y fácil</h1>
         <hr />
         <br />
         <form onSubmit={handleSubmit}>
           {[
+            { name: 'cedula', icon: 'badge' },
             { name: 'nombre', icon: 'person' },
             { name: 'apellido', icon: 'person' },
             { name: 'pais', icon: 'location_on' },
@@ -162,7 +173,7 @@ const Registro = () => {
             <input
               type="password"
               name="confirmPassword"
-              value={formData.confirmPassword}
+              value={confirmPassword}
               onChange={handleChange}
               className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400"
               placeholder="Confirmar Contraseña"
@@ -177,9 +188,8 @@ const Registro = () => {
             {loading ? 'Registrando...' : 'Registrarme'}
           </button>
         </form>
-        
       </div>
-  
+    </div>
   );
 };
 
