@@ -13,7 +13,7 @@ const Registro = () => {
     telefono: '',
     email: '',
     password: '',
-    rol: 'EMPLEADO'
+    rol: 'CLIENTE'
   });
 
   const [errors, setErrors] = useState({});
