@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 // import { registerUser } from '../api/registerUser'; // Importa la función de la API
 import axios from "axios";
-import { href } from 'react-router-dom';
 const Registro = () => {
   const [formData, setFormData] = useState({
     cedula: 0,
