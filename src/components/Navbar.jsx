@@ -14,7 +14,7 @@ const Navbar = () => {
                 <Link to="/home" className="px-4 py-4">Inicio</Link>
                 <Link to="/log_in" className="px-4 py-4">Iniciar sesión</Link>
                 <Link to="/nosotros" className="px-4 py-4">Nosotros</Link>
-                <Link to="/registrarse" className="px-4 py-4">Registrarse</Link>
+                <Link to="/registro" className="px-4 py-4">Registrarse</Link>
             </ul>
         </div>
     );
