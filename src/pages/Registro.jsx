@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-// import { registerUser } from '../api/registerUser'; // Importa la función de la API
 import axios from "axios";
+import bcrypt from "bcryptjs"; // Importar bcryptjs
+
 const Registro = () => {
   const [formData, setFormData] = useState({
     cedula: 0,
@@ -76,12 +77,17 @@ const Registro = () => {
     if (formIsValid && confirmPassword === formData.contrasena) {
       setLoading(true);
       try {
-        formData.cedula = parseInt(formData.cedula, 10);
-        const response = await axios.post("http://localhost:5173/api/user/registro", formData, {
+        // Hashear la contraseña antes de enviarla
+        const hashedPassword = await bcrypt.hash(formData.contrasena, 10);
+        const formDataToSend = { ...formData, contrasena: hashedPassword };
+        
+        formDataToSend.cedula = parseInt(formData.cedula, 10);
+        const response = await axios.post("http://localhost:5173/api/user/registro", formDataToSend, {
           headers: { "Content-Type": "application/json" }
-      });
+        });
+
         console.log('Usuario registrado:', response.data);
-         alert('Usuario registrado con éxito.');
+        alert('Usuario registrado con éxito.');
         window.location.href = "/";
       } catch (error) {
         console.error('Error al registrar usuario:', error);
@@ -102,7 +108,7 @@ const Registro = () => {
         <hr />
         <br />
         <form onSubmit={handleSubmit}>
-        <div className="mb-4 flex items-center">
+          <div className="mb-4 flex items-center">
             <span className="material-icons mr-2">badge</span>
             <input
               type="number"
@@ -115,6 +121,7 @@ const Registro = () => {
             {errors.cedula && <span className="text-red-500 ml-2">{errors.cedula}</span>}
           </div>
 
+          {/* Mapeo de los campos de entrada */}
           {[
             { name: 'nombre', icon: 'person' },
             { name: 'apellido', icon: 'person' },
@@ -122,7 +129,6 @@ const Registro = () => {
             { name: 'ciudad', icon: 'location_on' },
             { name: 'direccion', icon: 'location_on' },
           ].map(({ name, icon }) => (
-            
             <div className="mb-4 flex items-center" key={name}>
               <span className="material-icons mr-2">{icon}</span>
               <input
@@ -136,31 +142,7 @@ const Registro = () => {
               {errors[name] && <span className="text-red-500 ml-2">{errors[name]}</span>}
             </div>
           ))}
-         
-          <div className="mb-4 flex items-center">
-            <span className="material-icons mr-2">location_on</span>
-            <input
-              type="text"
-              name="codigoPostal"
-              value={formData.codigoPostal}
-              onChange={handleChange}
-              className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400"
-              placeholder="Código Postal"
-            />
-            {errors.codigoPostal && <span className="text-red-500 ml-2">{errors.codigoPostal}</span>}
-          </div>
-          <div className="mb-4 flex items-center">
-            <span className="material-icons mr-2">phone</span>
-            <input
-              type="text"
-              name="telefono"
-              value={formData.telefono}
-              onChange={handleChange}
-              className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400"
-              placeholder="Teléfono"
-            />
-            {errors.telefono && <span className="text-red-500 ml-2">{errors.telefono}</span>}
-          </div>
+
           <div className="mb-4 flex items-center">
             <span className="material-icons mr-2">email</span>
             <input
