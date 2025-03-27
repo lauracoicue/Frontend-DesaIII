@@ -57,7 +57,7 @@ const RecoverPass = () => {
     }, []);
 
     return (
-        <div className="flex justify-center my-32 w-full h-screen">
+        <div className="flex justify-center my-32 w-full ">
             <div className="w-[90%] max-w-[900px] h-[590px] bg-white rounded-lg shadow-lg sm:w-[80%] md:w-[70%] lg:w-1/2 p-6">
                 <h2 className="text-center text-2xl font-semibold text-blue-950 mb-4">
                     Recuperar Contraseña
