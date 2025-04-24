@@ -8,6 +8,8 @@ import Registro from "./pages/Registro";
 import Footer from "./components/Footer"
 import ClienteDashboard from "./pages/ClienteDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import ProductDetail from "./pages/ProductDetail";
+import ShoppingCart from "./pages/ShoppingCart";
 
 const App = () => {
   return (
@@ -21,6 +23,8 @@ const App = () => {
         <Route path="/registro" element={<Registro />} />
         <Route path="/cliente-dashboard" element={<ClienteDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/ProductDetail" element={<ProductDetail />} />
+        <Route path="/ShoppingCart" element={<ShoppingCart />} />
       </Routes>
       </div>
       <Footer/>
