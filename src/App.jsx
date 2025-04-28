@@ -12,6 +12,7 @@ import Productos from "./pages/Productos";
 import DetalleProducto from "./pages/Detalles";
 import ProductDetail from "./pages/ProductDetail";
 import ShoppingCart from "./pages/ShoppingCart";
+import InventoryManagement from "./pages/InventoryManagement";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/ProductDetail" element={<ProductDetail />} />
         <Route path="/ShoppingCart" element={<ShoppingCart />} />
+        <Route path="/inventory-management" element={<InventoryManagement />} />
       </Routes>
       </div>
       <Footer/>
