@@ -8,6 +8,8 @@ import Registro from "./pages/Registro";
 import Footer from "./components/Footer"
 import ClienteDashboard from "./pages/ClienteDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import Productos from "./pages/Productos";
+import DetalleProducto from "./pages/Detalles";
 
 const App = () => {
   return (
@@ -15,6 +17,8 @@ const App = () => {
       <Navbar/>
       <div className='pt-2'>
       <Routes>
+        <Route path="/productos" element={<Productos/>}></Route>
+        <Route path="/detalle/:id" element={<DetalleProducto />} />
         <Route path="/" element={<Home />} />
         <Route path="/log_in" element={<Log_in />} />
         <Route path="/recoverpass" element={<RecoverPass />} />
