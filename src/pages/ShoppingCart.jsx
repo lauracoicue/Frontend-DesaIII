@@ -3,42 +3,100 @@ import { useNavigate } from 'react-router-dom';
 
 const ShoppingCart = () => {
   const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Simulación de productos en el carrito
+  // Obtener productos del carrito desde el backend
   useEffect(() => {
-    const storedCart = [
-      {
-        id: 1,
-        name: 'Producto A',
-        price: 100,
-        quantity: 2,
-        imageUrl: 'https://via.placeholder.com/100'
-      },
-      {
-        id: 2,
-        name: 'Producto B',
-        price: 150,
-        quantity: 1,
-        imageUrl: 'https://via.placeholder.com/100'
+    const fetchCartItems = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:8081/api/productos/carrito', {
+          headers: {
+            'X-User-Id': 'user123' // Esto debería venir de tu sistema de autenticación
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Error al obtener los productos del carrito');
+        }
+        const data = await response.json();
+        setCart(data);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error:', err);
+      } finally {
+        setLoading(false);
       }
-    ];
-    setCart(storedCart);
+    };
+
+    fetchCartItems();
   }, []);
 
-  const updateQuantity = (id, amount) => {
-    setCart(prevCart =>
-      prevCart.map(item =>
-        item.id === id ? { ...item, quantity: Math.max(1, item.quantity + amount) } : item
-      )
+  const updateQuantity = async (id, amount) => {
+    try {
+      const response = await fetch(`http://localhost:8081/api/productos/carrito/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Id': 'user123' // Esto debería venir de tu sistema de autenticación
+        },
+        body: JSON.stringify({ cantidad: amount }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar la cantidad');
+      }
+
+      const updatedItem = await response.json();
+      setCart(prevCart =>
+        prevCart.map(item =>
+          item.id === id ? { ...item, quantity: updatedItem.quantity } : item
+        )
+      );
+    } catch (err) {
+      console.error('Error al actualizar cantidad:', err);
+      alert('Error al actualizar la cantidad del producto');
+    }
+  };
+
+  const removeItem = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8081/api/productos/carrito/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'X-User-Id': 'user123' // Esto debería venir de tu sistema de autenticación
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar el producto');
+      }
+
+      setCart(prevCart => prevCart.filter(item => item.id !== id));
+    } catch (err) {
+      console.error('Error al eliminar producto:', err);
+      alert('Error al eliminar el producto del carrito');
+    }
+  };
+
+  const total = cart.reduce((sum, item) => sum + item.product.precio * item.quantity, 0);
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 text-center">
+        <p>Cargando carrito...</p>
+      </div>
     );
-  };
+  }
 
-  const removeItem = (id) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== id));
-  };
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 text-center text-red-600">
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -60,18 +118,18 @@ const ShoppingCart = () => {
           {cart.map(item => (
             <div key={item.id} className="flex items-center justify-between border-b pb-4">
               <div className="flex items-center gap-4">
-                <img src={item.imageUrl} alt={item.name} className="w-20 h-20 object-cover rounded" />
+                <img src={item.product.imagenUrl} alt={item.product.nombre} className="w-20 h-20 object-cover rounded" />
                 <div>
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p className="text-gray-600">Precio: ${item.price}</p>
-                  <p className="text-gray-600">Subtotal: ${item.price * item.quantity}</p>
+                  <h3 className="text-lg font-semibold">{item.product.nombre}</h3>
+                  <p className="text-gray-600">Precio: ${item.product.precio}</p>
+                  <p className="text-gray-600">Subtotal: ${item.product.precio * item.quantity}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={() => updateQuantity(item.id, -1)} className="px-3 py-1 bg-gray-300 rounded">-</button>
+                <button onClick={() => updateQuantity(item.product.id, -1)} className="px-3 py-1 bg-gray-300 rounded">-</button>
                 <span>{item.quantity}</span>
-                <button onClick={() => updateQuantity(item.id, 1)} className="px-3 py-1 bg-gray-300 rounded">+</button>
-                <button onClick={() => removeItem(item.id)} className="ml-4 text-red-600 hover:underline">Eliminar</button>
+                <button onClick={() => updateQuantity(item.product.id, 1)} className="px-3 py-1 bg-gray-300 rounded">+</button>
+                <button onClick={() => removeItem(item.product.id)} className="ml-4 text-red-600 hover:underline">Eliminar</button>
               </div>
             </div>
           ))}
