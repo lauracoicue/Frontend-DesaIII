@@ -56,7 +56,7 @@ const Form = () => {
     };
 
     return (
-            <div className="bg-white w-full max-w-md">
+            <div className="bg-white w-full max-w-md ">
                 <h1 className="text-4xl font-semibold text-center">Bienvenido de nuevo</h1>
                 <p className="font-medium text-lg text-gray-500 text-center mt-3">Disfruta de tus compras</p>
 
