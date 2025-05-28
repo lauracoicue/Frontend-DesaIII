@@ -3,6 +3,7 @@ import galaxy from "../img_productos/galaxy.jpg";
 // import audionofo from "../img_productos/audifonos.jpg";
 // import laptop from "../img_productos/laptop.jpg";
 import { useNavigate } from "react-router-dom";
+import { getAllProducts } from "../api/inventoryService";
 
 /*
 import React, { useEffect, useState } from "react";
@@ -100,15 +101,13 @@ const Productos = () => {
     const fetchProductos = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:8081/api/product');
-        if (!response.ok) {
-          throw new Error('Error al obtener los productos');
-        }
-        const data = await response.json();
+        console.log('Intentando obtener productos...');
+        const data = await getAllProducts();
+        console.log('Datos recibidos:', data);
         setProductos(data);
       } catch (err) {
+        console.error('Error detallado:', err);
         setError(err.message);
-        console.error('Error:', err);
       } finally {
         setLoading(false);
       }
@@ -127,7 +126,7 @@ const Productos = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-User-Id': 'user123' // Esto debería venir de tu sistema de autenticación
+          'X-User-Id': 'user123'
         },
         body: JSON.stringify({ cantidad: 1 })
       });
@@ -146,15 +145,24 @@ const Productos = () => {
   if (loading) {
     return (
       <div className="p-6 text-center">
-        <p>Cargando productos...</p>
+        <p className="text-lg">Cargando productos...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-6 text-center text-red-600">
-        <p>Error: {error}</p>
+      <div className="p-6 text-center">
+        <p className="text-red-600 text-lg mb-4">Error: {error}</p>
+        <p className="text-gray-600">Por favor, verifica que el servidor esté funcionando correctamente.</p>
+      </div>
+    );
+  }
+
+  if (productos.length === 0) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-gray-600 text-lg">No se encontraron productos disponibles.</p>
       </div>
     );
   }
