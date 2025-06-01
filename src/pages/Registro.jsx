@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from "axios";
-import bcrypt from "bcryptjs"; // Importar bcryptjs
+import bcrypt from "bcryptjs";
 
 const Registro = () => {
   const [formData, setFormData] = useState({
-    cedula: 0,
+    cedula: '',
     nombre: '',
     apellido: '',
     pais: '',
@@ -44,8 +44,8 @@ const Registro = () => {
         break;
       }
       case 'telefono': {
-        const phoneRegex = /^\+\d+$/;
-        if (!phoneRegex.test(value)) error = 'El teléfono debe de tener prefijo.';
+        const phoneRegex = /^\d{7,15}$/;
+        if (!phoneRegex.test(value)) error = 'El teléfono debe contener solo números (sin prefijo) y tener entre 7 y 15 dígitos.';
         break;
       }
       case 'contrasena': {
@@ -100,92 +100,100 @@ const Registro = () => {
     }
   };
 
+
   return (
-    <div className="min-h-screen flex items-center justify-center ">
-      <div className="shadow-lg bg-blue-950 text-white w-full max-w-md p-10 rounded-lg">
-        <h1 className="text-3xl text-center font-bold mb-4">Crea una cuenta</h1>
-        <h1 className="text-base text-center font-bold mb-4">Es rápido y fácil</h1>
-        <hr />
-        <br />
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4 flex items-center">
-            <span className="material-icons mr-2">badge</span>
-            <input
-              type="number"
-              name="cedula"
-              value={formData.cedula}
-              onChange={handleChange}
-              className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400"
-              placeholder="Cédula"
-            />
-            {errors.cedula && <span className="text-red-500 ml-2">{errors.cedula}</span>}
+    <div className="p-10 flex justify-center bg-blue-50 to-white">
+      <div className="shadow-lg bg-white w-full max-w-7xl p-10 rounded-lg">
+        <h1 className="text-3xl text-center font-bold mb-5">Crea una cuenta</h1>
+        <h2 className="font-medium text-lg text-gray-500 text-center mt-3 my-8">Es rápido y fácil</h2>
+        <hr className="mb-9" />
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8 gap-x-16">
+
+          {/* Cédula */}
+          <div className="flex flex-col">
+            <div className="flex items-center">
+              <span className="material-icons mr-2">badge</span>
+              <input
+                type="text"
+                name="cedula"
+                value={formData.cedula}
+                onChange={handleChange}
+                className="flex-1 border-2 border-gray-300 p-3 rounded-xl mt-1 placeholder-gray-400"
+                placeholder="Cédula"
+              />
+            </div>
+            {errors.cedula && <span className="text-red-600 text-sm mt-1">{errors.cedula}</span>}
           </div>
 
-          {/* Mapeo de los campos de entrada */}
+          {/* Campos texto */}
           {[
             { name: 'nombre', icon: 'person' },
             { name: 'apellido', icon: 'person' },
             { name: 'pais', icon: 'location_on' },
             { name: 'ciudad', icon: 'location_on' },
             { name: 'direccion', icon: 'location_on' },
+            { name: 'codigoPostal', icon: 'markunread_mailbox' },
+            { name: 'telefono', icon: 'phone' },
+            { name: 'correo', icon: 'email' }
           ].map(({ name, icon }) => (
-            <div className="mb-4 flex items-center" key={name}>
-              <span className="material-icons mr-2">{icon}</span>
-              <input
-                type="text"
-                name={name}
-                value={formData[name]}
-                onChange={handleChange}
-                className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400"
-                placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
-              />
-              {errors[name] && <span className="text-red-500 ml-2">{errors[name]}</span>}
+            <div className="flex flex-col" key={name}>
+              <div className="flex items-center">
+                <span className="material-icons mr-2">{icon}</span>
+                <input
+                  type={name === 'correo' ? 'email' : 'text'}
+                  name={name}
+                  value={formData[name]}
+                  onChange={handleChange}
+                  className="flex-1 border-2 border-gray-300 p-3 rounded-xl mt-1 placeholder-gray-400"
+                  placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
+                />
+              </div>
+              {errors[name] && <span className="text-red-600 text-sm mt-1">{errors[name]}</span>}
             </div>
           ))}
 
-          <div className="mb-4 flex items-center">
-            <span className="material-icons mr-2">email</span>
-            <input
-              type="email"
-              name="correo"
-              value={formData.correo}
-              onChange={handleChange}
-              className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400"
-              placeholder="Correo"
-            />
-            {errors.correo && <span className="text-red-500 ml-2">{errors.correo}</span>}
+          {/* Contraseña */}
+          <div className="flex flex-col">
+            <div className="flex items-center">
+              <span className="material-icons mr-2">lock</span>
+              <input
+                type="password"
+                name="contrasena"
+                value={formData.contrasena}
+                onChange={handleChange}
+                className="flex-1 border-2 border-gray-300 p-3 rounded-xl mt-1 placeholder-gray-400"
+                placeholder="Contraseña"
+              />
+            </div>
+            {errors.contrasena && <span className="text-red-600 text-sm mt-1">{errors.contrasena}</span>}
           </div>
-          <div className="mb-4 flex items-center">
-            <span className="material-icons mr-2">lock</span>
-            <input
-              type="password"
-              name="contrasena"
-              value={formData.contrasena}
-              onChange={handleChange}
-              className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400"
-              placeholder="Contraseña"
-            />
-            {errors.contrasena && <span className="text-red-500 ml-2">{errors.contrasena}</span>}
+
+          {/* Confirmar Contraseña */}
+          <div className="flex flex-col">
+            <div className="flex items-center">
+              <span className="material-icons mr-2">lock</span>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={confirmPassword}
+                onChange={handleChange}
+                className="flex-1 border-2 border-gray-300 p-3 rounded-xl mt-1 placeholder-gray-400"
+                placeholder="Confirmar Contraseña"
+              />
+            </div>
+            {errors.confirmPassword && <span className="text-red-600 text-sm mt-1">{errors.confirmPassword}</span>}
           </div>
-          <div className="mb-4 flex items-center">
-            <span className="material-icons mr-2">lock</span>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={handleChange}
-              className="flex-1 p-2 rounded-md bg-gray-800 text-white placeholder-gray-400"
-              placeholder="Confirmar Contraseña"
-            />
-            {errors.confirmPassword && <span className="text-red-500 ml-2">{errors.confirmPassword}</span>}
+
+          {/* Botón */}
+          <div className="md:col-span-3 flex justify-center">
+            <button
+              type="submit"
+              className="bg-blue-950 text-white py-2 my-4 rounded-xl hover:bg-blue-900 w-1/3"
+              disabled={loading}from-blue-100 to-white p-4
+            >
+              {loading ? 'Registrando...' : 'Registrarme'}
+            </button>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-[#01C38E] text-white p-2 rounded-md hover:bg-teal-600"
-            disabled={loading}
-          >
-            {loading ? 'Registrando...' : 'Registrarme'}
-          </button>
         </form>
       </div>
     </div>

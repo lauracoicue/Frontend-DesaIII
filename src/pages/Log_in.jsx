@@ -8,7 +8,7 @@ const Log_in = () => {
             <div className="w-full flex justify-center lg:w-1/2 my-16">
                 <Form/>
             </div>
-            <div className="hidden relative lg:flex py-0 h-full w-1/2 bg-blue-100 justify-center items-center">
+            <div className="hidden relative lg:flex py-0 h-full w-1/2 bg-slate-100 justify-center items-center">
                 <h1 className="absolute top-10 text-center text-xl font-bold text-bl">
                     Descubre todo lo que necesitas en un solo lugar. 
                     Calidad, variedad y confianza al alcance de un clic. 
