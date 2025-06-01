@@ -5,37 +5,126 @@ import Log_in from "./pages/Log_in";
 import RecoverPass from "./pages/RecoverPass";
 import Navbar from "./components/Navbar";
 import Registro from "./pages/Registro";
-import Footer from "./components/Footer"
-import ClienteDashboard from "./pages/ClienteDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
+import Footer from "./components/Footer";
 import Productos from "./pages/Productos";
 import DetalleProducto from "./pages/Detalles";
-import ProductDetail from "./pages/ProductDetail";
 import ShoppingCart from "./pages/ShoppingCart";
 import InventoryManagement from "./pages/InventoryManagement";
+import PublicRoute from "./routes/PublicRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import Nosotros from "./pages/Nosotros";
+import Hist_Ventas from "./cliente-opci/Hist_Ventas"
+import Perfil_cliente from "./cliente-opci/Perfil_cliente";
+import Editor_produc from "./admin-opci/Editor_produc"
+import Pedidos from "./admin-opci/Pedidos";
+import PerfilAdmin from "./admin-opci/PerfilAdmin";
+import AsignarPedi from "./admin-opci/AsignarPedi";
+import CrearUsuario from "./admin-opci/CrearUsuario";
+import Perfil_repartidor from "./reparti_opci/Perfil_repartidor";
+
 
 const App = () => {
   return (
-    <div >
-      <Navbar/>
-      <div className='pt-2'>
-      <Routes>
-        <Route path="/productos" element={<Productos/>}></Route>
-        <Route path="/detalle/:id" element={<DetalleProducto />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/log_in" element={<Log_in />} />
-        <Route path="/recoverpass" element={<RecoverPass />} />
-        <Route path="/registro" element={<Registro />} />
-        <Route path="/cliente-dashboard" element={<ClienteDashboard />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/ProductDetail" element={<ProductDetail />} />
-        <Route path="/ShoppingCart" element={<ShoppingCart />} />
-        <Route path="/inventory-management" element={<InventoryManagement />} />
-      </Routes>
-      </div>
-      <Footer/>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow"> {/* Asegura espacio para el navbar */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/nosotros" element={<Nosotros />} />
+          <Route path="/productos" element={<Productos />} />
+          
+          {/* Public Routes */}
+          <Route path="/log_in" element={
+            <PublicRoute>
+              <Log_in />
+            </PublicRoute>
+          } />
+          <Route path="/registro" element={
+            <PublicRoute>
+              <Registro />
+            </PublicRoute>
+          } />
+          <Route path="/recoverpass" element={
+            <PublicRoute>
+              <RecoverPass />
+            </PublicRoute>
+          } />
+          {/*Public Routes */}
+          <Route path="/productos" element={
+            <PublicRoute>
+              <Productos />
+            </PublicRoute>
+          } />
+          <Route path="/productos/:id" element={
+            <ProtectedRoute>
+              <DetalleProducto />
+            </ProtectedRoute>
+          } />
+          <Route path="/carrito" element={
+            <PublicRoute>
+              <ShoppingCart />
+            </PublicRoute>
+          } />
+          {/* Protected Routes */}
+          {/* Protected historial */}
+          <Route path="/historial-compras" element={
+            <ProtectedRoute>
+              <Hist_Ventas/>
+            </ProtectedRoute>
+          } />
+          {/* Protected perfil cliente */}
+          <Route path="/perfil" element={
+            <ProtectedRoute>
+              <Perfil_cliente/>
+            </ProtectedRoute>
+          } />
+          {/* Protected perfil repartidor */}
+          <Route path="/perfil-repartidor" element={
+            <ProtectedRoute>
+              <Perfil_repartidor/>
+            </ProtectedRoute>
+          } />
+          {/* Admin Routes */}
+          <Route path="/admin/inventario" element={
+            <ProtectedRoute requiredRole="admin">
+              <InventoryManagement />
+            </ProtectedRoute>
+          } />
+          {/* Admin Routes */}
+          <Route path="/asignar-pedidos" element={
+            <ProtectedRoute requiredRole="admin">
+              <AsignarPedi />
+            </ProtectedRoute>
+          } />
+          {/* Protected Pedidos */}
+          <Route path="/pedidos" element={
+            <ProtectedRoute>
+              <Pedidos />
+            </ProtectedRoute>
+          } />
+          {/* Protected Pedidos */}
+          <Route path="/crear-usuario" element={
+            <ProtectedRoute>
+              <CrearUsuario />
+            </ProtectedRoute>
+          } />
+          {/* Protected Pedidos */}
+          <Route path="/perfil-admin" element={
+            <ProtectedRoute>
+              <PerfilAdmin />
+            </ProtectedRoute>
+          } />
+          {/* Protected edicion de productos */}
+          <Route path="/editor-productos" element={
+            <ProtectedRoute>
+              <Editor_produc/>
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </main>
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
 export default App;

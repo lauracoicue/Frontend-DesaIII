@@ -6,7 +6,7 @@ import image3 from "../assets/image3.png";
 
 const Home = () => {
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-4">
             <div className="max-w-4xl text-center">
                 <h1 className="text-4xl font-bold text-gray-800">Bienvenido a Nuestra Tienda</h1>
                 <p className="text-gray-600 mt-4 text-lg">Descubre productos exclusivos y compra de manera fácil y segura desde la comodidad de tu hogar.</p>

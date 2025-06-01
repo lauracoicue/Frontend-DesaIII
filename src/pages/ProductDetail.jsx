@@ -86,7 +86,7 @@ const ProductDetail = () => {
     <div className="max-w-4xl mx-auto p-6">
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center text-blue-600 hover:underline mb-4"
+        className="flex items-center text-blue-900 hover:underline mb-4"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />

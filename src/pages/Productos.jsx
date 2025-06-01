@@ -160,7 +160,7 @@ const Productos = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 from-blue-100 to-white">
       <h1 className="text-3xl font-bold mb-4">Electrónica</h1>
       <p className="text-gray-700 mb-6">
         Explora los mejores productos de electrónica con tecnología de punta.
