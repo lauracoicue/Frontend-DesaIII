@@ -21,109 +21,127 @@ import PerfilAdmin from "./admin-opci/PerfilAdmin";
 import AsignarPedi from "./admin-opci/AsignarPedi";
 import CrearUsuario from "./admin-opci/CrearUsuario";
 import Perfil_repartidor from "./reparti_opci/Perfil_repartidor";
+import Historial_Entregas from "./reparti_opci/Historial_Entregas";
+import EntregasAsignadas from "./reparti_opci/EntregasAsigna";
+import { HistorialProvider } from "./context/HistorialContext"; // 👈 Agrega esto
+
 
 
 const App = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow"> {/* Asegura espacio para el navbar */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/nosotros" element={<Nosotros />} />
-          <Route path="/productos" element={<Productos />} />
-          
-          {/* Public Routes */}
-          <Route path="/log_in" element={
-            <PublicRoute>
-              <Log_in />
-            </PublicRoute>
-          } />
-          <Route path="/registro" element={
-            <PublicRoute>
-              <Registro />
-            </PublicRoute>
-          } />
-          <Route path="/recoverpass" element={
-            <PublicRoute>
-              <RecoverPass />
-            </PublicRoute>
-          } />
-          {/*Public Routes */}
-          <Route path="/productos" element={
-            <PublicRoute>
-              <Productos />
-            </PublicRoute>
-          } />
-          <Route path="/productos/:id" element={
-            <ProtectedRoute>
-              <DetalleProducto />
-            </ProtectedRoute>
-          } />
-          <Route path="/carrito" element={
-            <PublicRoute>
-              <ShoppingCart />
-            </PublicRoute>
-          } />
-          {/* Protected Routes */}
-          {/* Protected historial */}
-          <Route path="/historial-compras" element={
-            <ProtectedRoute>
-              <Hist_Ventas/>
-            </ProtectedRoute>
-          } />
-          {/* Protected perfil cliente */}
-          <Route path="/perfil" element={
-            <ProtectedRoute>
-              <Perfil_cliente/>
-            </ProtectedRoute>
-          } />
-          {/* Protected perfil repartidor */}
-          <Route path="/perfil-repartidor" element={
-            <ProtectedRoute>
-              <Perfil_repartidor/>
-            </ProtectedRoute>
-          } />
-          {/* Admin Routes */}
-          <Route path="/admin/inventario" element={
-            <ProtectedRoute requiredRole="admin">
-              <InventoryManagement />
-            </ProtectedRoute>
-          } />
-          {/* Admin Routes */}
-          <Route path="/asignar-pedidos" element={
-            <ProtectedRoute requiredRole="admin">
-              <AsignarPedi />
-            </ProtectedRoute>
-          } />
-          {/* Protected Pedidos */}
-          <Route path="/pedidos" element={
-            <ProtectedRoute>
-              <Pedidos />
-            </ProtectedRoute>
-          } />
-          {/* Protected Pedidos */}
-          <Route path="/crear-usuario" element={
-            <ProtectedRoute>
-              <CrearUsuario />
-            </ProtectedRoute>
-          } />
-          {/* Protected Pedidos */}
-          <Route path="/perfil-admin" element={
-            <ProtectedRoute>
-              <PerfilAdmin />
-            </ProtectedRoute>
-          } />
-          {/* Protected edicion de productos */}
-          <Route path="/editor-productos" element={
-            <ProtectedRoute>
-              <Editor_produc/>
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <HistorialProvider> {/* 👈 Envuelve aquí */}
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow"> {/* Asegura espacio para el navbar */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/nosotros" element={<Nosotros />} />
+            <Route path="/productos" element={<Productos />} />
+            
+            {/* Public Routes */}
+            <Route path="/log_in" element={
+              <PublicRoute>
+                <Log_in />
+              </PublicRoute>
+            } />
+            <Route path="/registro" element={
+              <PublicRoute>
+                <Registro />
+              </PublicRoute>
+            } />
+            <Route path="/recoverpass" element={
+              <PublicRoute>
+                <RecoverPass />
+              </PublicRoute>
+            } />
+            {/*Public Routes */}
+            <Route path="/productos" element={
+              <PublicRoute>
+                <Productos />
+              </PublicRoute>
+            } />
+            <Route path="/productos/:id" element={
+              <ProtectedRoute>
+                <DetalleProducto />
+              </ProtectedRoute>
+            } />
+            <Route path="/carrito" element={
+              <PublicRoute>
+                <ShoppingCart />
+              </PublicRoute>
+            } />
+            {/* Protected Routes */}
+            {/* Protected historial */}
+            <Route path="/historial-compras" element={
+              <ProtectedRoute>
+                <Hist_Ventas/>
+              </ProtectedRoute>
+            } />
+            {/* Protected perfil cliente */}
+            <Route path="/perfil" element={
+              <ProtectedRoute>
+                <Perfil_cliente/>
+              </ProtectedRoute>
+            } />
+            {/* Protected perfil repartidor */}
+            <Route path="/perfil-repartidor" element={
+              <ProtectedRoute>
+                <Perfil_repartidor/>
+              </ProtectedRoute>
+            } />
+            {/* Admin Routes */}
+            <Route path="/admin/inventario" element={
+              <ProtectedRoute requiredRole="admin">
+                <InventoryManagement />
+              </ProtectedRoute>
+            } />
+            {/* Admin Routes */}
+            <Route path="/asignar-pedidos" element={
+              <ProtectedRoute requiredRole="admin">
+                <AsignarPedi />
+              </ProtectedRoute>
+            } />
+            {/* Protected Pedidos */}
+            <Route path="/pedidos" element={
+              <ProtectedRoute>
+                <Pedidos />
+              </ProtectedRoute>
+            } />
+            {/* Protected Pedidos */}
+            <Route path="/crear-usuario" element={
+              <ProtectedRoute>
+                <CrearUsuario />
+              </ProtectedRoute>
+            } />
+            {/* Protected Pedidos */}
+            <Route path="/perfil-admin" element={
+              <ProtectedRoute>
+                <PerfilAdmin />
+              </ProtectedRoute>
+            } />
+            {/* Protected edicion de productos */}
+            <Route path="/editor-productos" element={
+              <ProtectedRoute>
+                <Editor_produc/>
+              </ProtectedRoute>
+            } />
+            {/* Protected edicion de productos */}
+            <Route path="/historial-entregas" element={
+              <ProtectedRoute>
+                <Historial_Entregas/>
+              </ProtectedRoute>
+            } />
+            {/* Protected edicion de productos */}
+            <Route path="/entregas-asignadas" element={
+              <ProtectedRoute>
+                <EntregasAsignadas/>
+              </ProtectedRoute>
+            } />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </HistorialProvider>
   );
 };
 

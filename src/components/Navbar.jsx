@@ -124,7 +124,7 @@ const Navbar = () => {
       
             <div className="absolute hidden group-hover:block group-focus-within:block right-0 mt-2 w-48 bg-slate-900 text-white rounded-md shadow-lg z-10">
               <Link 
-                to="/perfil" 
+                to="/perfil-repartidor" 
                 className="block px-4 py-2 hover:bg-sky-800"
               >
                 perfil
