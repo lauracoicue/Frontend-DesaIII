@@ -34,6 +34,10 @@ const ShoppingCart = () => {
   }, []);
 
   const updateQuantity = async (id, amount) => {
+    if (amount < 1) {
+        alert('La cantidad no puede ser menor a 1');
+        return;
+    }
     try {
       const response = await fetch(`http://localhost:8081/api/productos/carrito/${id}`, {
         method: 'PUT',
