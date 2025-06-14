@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import galaxy from "../img_productos/galaxy.jpg";
-import audionofo from "../img_productos/audifonos.jpg";
-import laptop from "../img_productos/laptop.jpg";
+// import audionofo from "../img_productos/audifonos.jpg";
+// import laptop from "../img_productos/laptop.jpg";
 import { useNavigate } from "react-router-dom";
 import { getAllProducts } from "../api/inventoryService";
 
@@ -46,50 +46,50 @@ const Productos = () => {
 
 // src/components/Productos.jsx
 
-const productosElementos = [
-  {
-    id: 1,
-    nombre: "Smartphone Galaxy",
-    precio: "$450",
-    img: galaxy,
-    descripcion: "Pantalla AMOLED, 128GB de almacenamiento y cámara de 64MP"
-  },
-  {
-    id: 2,
-    nombre: "Laptop Dell",
-    precio: "$900",
-    img: laptop,
-    descripcion: "Procesador Intel i7, 16GB RAM, SSD 512GB, ideal para trabajo"
-  },
-  {
-    id: 3,
-    nombre: "Audífonos Bluetooth",
-    precio: "$60",
-    img: audionofo,
-    descripcion: "Conectividad inalámbrica y cancelación de ruido"
-  },
-  {
-    id: 4,
-    nombre: "Iphone",
-    precio: "$450",
-    img: galaxy,
-    descripcion: "Pantalla AMOLED, 128GB de almacenamiento y cámara de 64MP"
-  },
-  {
-    id: 5,
-    nombre: "Laptop ASUS",
-    precio: "$900",
-    img: laptop,
-    descripcion: "Procesador Intel i7, 16GB RAM, SSD 512GB, ideal para trabajo"
-  },
-  {
-    id: 6,
-    nombre: "Audífonos Inalambricos",
-    precio: "$60",
-    img: audionofo,
-    descripcion: "Conectividad inalámbrica y cancelación de ruido"
-  }
-];
+// const productosElementos = [
+//   {
+//     id: 1,
+//     nombre: "Smartphone Galaxy",
+//     precio: "$450",
+//     img: galaxy,
+//     descripcion: "Pantalla AMOLED, 128GB de almacenamiento y cámara de 64MP"
+//   },
+//   {
+//     id: 2,
+//     nombre: "Laptop Dell",
+//     precio: "$900",
+//     img: laptop,
+//     descripcion: "Procesador Intel i7, 16GB RAM, SSD 512GB, ideal para trabajo"
+//   },
+//   {
+//     id: 3,
+//     nombre: "Audífonos Bluetooth",
+//     precio: "$60",
+//     img: audionofo,
+//     descripcion: "Conectividad inalámbrica y cancelación de ruido"
+//   },
+//   {
+//     id: 4,
+//     nombre: "Iphone",
+//     precio: "$450",
+//     img: galaxy,
+//     descripcion: "Pantalla AMOLED, 128GB de almacenamiento y cámara de 64MP"
+//   },
+//   {
+//     id: 5,
+//     nombre: "Laptop ASUS",
+//     precio: "$900",
+//     img: laptop,
+//     descripcion: "Procesador Intel i7, 16GB RAM, SSD 512GB, ideal para trabajo"
+//   },
+//   {
+//     id: 6,
+//     nombre: "Audífonos Inalambricos",
+//     precio: "$60",
+//     img: audionofo,
+//     descripcion: "Conectividad inalámbrica y cancelación de ruido"
+//   }
+// ];
 
 const Productos = () => {
   const navigate = useNavigate();
