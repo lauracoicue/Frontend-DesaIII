@@ -66,9 +66,9 @@ const App = () => {
               </ProtectedRoute>
             } />
             <Route path="/carrito" element={
-              <PublicRoute>
+              <ProtectedRoute>
                 <ShoppingCart />
-              </PublicRoute>
+              </ProtectedRoute>
             } />
             {/* Protected Routes */}
             {/* Protected historial */}

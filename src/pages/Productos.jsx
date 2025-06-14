@@ -4,6 +4,7 @@ import galaxy from "../img_productos/galaxy.jpg";
 // import laptop from "../img_productos/laptop.jpg";
 import { useNavigate } from "react-router-dom";
 import { getAllProducts } from "../api/inventoryService";
+import { useAuth } from '../context/AuthContext';
 
 /*
 import React, { useEffect, useState } from "react";
@@ -96,6 +97,7 @@ const Productos = () => {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -121,12 +123,18 @@ const Productos = () => {
   };
 
   const agregarAlCarrito = async (producto) => {
+    if (!user) {
+      alert('Debes iniciar sesión para agregar productos al carrito');
+      navigate('/log_in');
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:8081/api/productos/carrito/${producto.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-User-Id': 'user123'
+          'X-User-Id': user.id
         },
         body: JSON.stringify({ cantidad: 1 })
       });

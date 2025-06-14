@@ -5,6 +5,7 @@ import { getProductReviews, createReview, deleteReview } from '../api/reviewServ
 import galaxy from "../img_productos/galaxy.jpg";
 import audionofo from "../img_productos/audifonos.jpg";
 import laptop from "../img_productos/laptop.jpg";
+import { useAuth } from '../context/AuthContext';
 
 const productos = [
   {
@@ -34,6 +35,7 @@ const DetalleProducto = () => {
   const { id } = useParams();
   const { state: producto } = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
@@ -108,6 +110,34 @@ const DetalleProducto = () => {
     navigate(`/productos/${producto.id}`, { state: producto });
   };
 
+  const agregarAlCarrito = async () => {
+    if (!user) {
+      alert('Debes iniciar sesión para agregar productos al carrito');
+      navigate('/log_in');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8081/api/productos/carrito/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Id': user.id
+        },
+        body: JSON.stringify({ cantidad: 1 })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al agregar al carrito');
+      }
+
+      alert('Producto agregado al carrito');
+    } catch (err) {
+      console.error('Error al agregar al carrito:', err);
+      alert('Error al agregar el producto al carrito');
+    }
+  };
+
   if (!producto) {
     return <p className="p-6 text-red-600">Producto no encontrado.</p>;
   }
@@ -139,13 +169,18 @@ const DetalleProducto = () => {
             </span>
           </p>
           <button 
-          onClick={("")}
-          className="bg-blue-400 hover:bg-blue-800 text-white py-2 px-6 rounded w-full text-lg ">
+            onClick={agregarAlCarrito}
+            className="bg-blue-400 hover:bg-blue-800 text-white py-2 px-6 rounded w-full text-lg"
+          >
             Agregar al carrito
           </button>
           <button 
-          onAbort={("")}
-          className="bg-blue-950 hover:bg-blue-900 text-white py-2 px-6 my-4 rounded w-full text-lg">
+            onClick={() => {
+              agregarAlCarrito();
+              navigate('/carrito');
+            }}
+            className="bg-blue-950 hover:bg-blue-900 text-white py-2 px-6 my-4 rounded w-full text-lg"
+          >
             Comprar ahora
           </button>
         </div>
