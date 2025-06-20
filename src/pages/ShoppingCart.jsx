@@ -20,7 +20,7 @@ const ShoppingCart = () => {
 
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:8081/api/productos/carrito', {
+        const response = await fetch('http://localhost:8089/api/productos/carrito', {
           headers: {
             'X-User-Id': user.id
           }
@@ -59,7 +59,7 @@ const ShoppingCart = () => {
         throw new Error('Item no encontrado en el carrito');
       }
 
-      const response = await fetch(`http://localhost:8081/api/productos/carrito/${cartItem.product.id}`, {
+      const response = await fetch(`http://localhost:8089/api/productos/carrito/${cartItem.product.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ const ShoppingCart = () => {
         throw new Error('Item no encontrado en el carrito');
       }
 
-      const response = await fetch(`http://localhost:8081/api/productos/carrito/${cartItem.product.id}`, {
+      const response = await fetch(`http://localhost:8089/api/productos/carrito/${cartItem.product.id}`, {
         method: 'DELETE',
         headers: {
           'X-User-Id': user.id
