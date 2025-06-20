@@ -130,7 +130,7 @@ const Productos = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8081/api/productos/carrito/${producto.id}`, {
+      const response = await fetch(`http://localhost:8089/api/productos/carrito/${producto.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

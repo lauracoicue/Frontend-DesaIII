@@ -118,7 +118,7 @@ const DetalleProducto = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8081/api/productos/carrito/${id}`, {
+      const response = await fetch(`http://localhost:8089/api/productos/carrito/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
