@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: front
-          image: juanjohernan/imagenes:front
+          image: juanjoher/imagenes:front
           ports:
             - containerPort: 5173
           env:

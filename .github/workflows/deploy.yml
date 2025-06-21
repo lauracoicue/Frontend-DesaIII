@@ -7,7 +7,7 @@ on:
       - develop
 
 env:
-  IMAGE_NAME: juanjohernan/imagenes:front
+  IMAGE_NAME: juanjoher/imagenes:front
   REGISTRY: docker.io
 
 jobs:
