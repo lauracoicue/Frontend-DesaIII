@@ -60,15 +60,15 @@ const App = () => {
                 <Productos />
               </PublicRoute>
             } />
-            <Route path="/productos/:id" element={
+            <Route path="/detalle/:id" element={
               <ProtectedRoute>
                 <DetalleProducto />
               </ProtectedRoute>
             } />
             <Route path="/carrito" element={
-              <PublicRoute>
+              <ProtectedRoute>
                 <ShoppingCart />
-              </PublicRoute>
+              </ProtectedRoute>
             } />
             {/* Protected Routes */}
             {/* Protected historial */}

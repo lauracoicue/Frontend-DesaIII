@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8081/api/productos';
+const API_URL = 'http://localhost:8089/api/productos';
 
 // Configuración de axios
 const api = axios.create({
