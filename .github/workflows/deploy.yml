@@ -1,4 +1,4 @@
-name: Deploy Spring Boot Microservice
+name: Deploy React Frontend
 
 on:
   push:
@@ -18,15 +18,17 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar JDK 17
-        uses: actions/setup-java@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          node-version: '18'
+          cache: 'npm'
 
-      - name: Compilar aplicación con Maven (sin pruebas)
-        run: mvn clean package -DskipTests
+      - name: Instalar dependencias
+        run: npm ci
 
+      - name: Compilar aplicación con npm
+        run: npm run build
 
       - name: Iniciar sesión en Docker Hub
         uses: docker/login-action@v3
