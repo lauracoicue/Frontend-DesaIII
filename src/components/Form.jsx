@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Eye, EyeOff } from "lucide-react";  // Importar íconos de Lucide
+import axios from "axios";
+
 
 const Form = () => {
     const navigate = useNavigate();
@@ -17,80 +19,60 @@ const Form = () => {
         return regex.test(email);
     };
 
-    const validarPassword = (password) => {
+    /*const validarPassword = (password) => {
         const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
         return passwordRegex.test(password);
-    };
+    };*/
 
+    
     const handleLogin = async () => {
         setError("");
         setLoading(true);
-
+    
         if (!validarEmail(email)) {
             setError("Correo inválido.");
+            console.warn("❌ Email inválido:", email);
             setLoading(false);
             return;
         }
-
-        if (!validarPassword(password)) {
+    
+        /*if (!validarPassword(password)) {
             setError("La contraseña debe tener al menos 8 caracteres con un carácter especial.");
+            console.warn("❌ Contraseña no cumple requisitos.");
             setLoading(false);
             return;
-        }
-
-        const staticUsers = [
-            {
-                correo: "admin@demo.com",
-                contrasena: "Admin@123",
-                role: "admin",
-                id: 1,
-                nombre: "Admin Demo"
-            },
-            {
-                correo: "cliente@demo.com",
-                contrasena: "Cliente@123",
-                role: "client",
-                id: 2,
-                nombre: "Cliente Demo"
-            },
-            {
-                correo: "repartidor@demo.com",
-                contrasena: "Repartidor@123",
-                role: "delivery",
-                id: 3,
-                nombre: "Repartidor Demo"
-            }
-        ];
-
-        await new Promise(resolve => setTimeout(resolve, 500));
-
+        }*/
+    
         try {
-            const user = staticUsers.find(u => 
-                u.correo === email && u.contrasena === password
-            );
+            const response = await axios.post("http://localhost:8090/auth/login", {
+  correo: email,
+  contrasena: password
+});
 
-            if (!user) {
-                throw new Error("Credenciales incorrectas.");
+    
+            const token = response.data.token;
+    
+            if (!token) {
+                console.error("⚠ No se recibió token del backend.");
+                setError("Error inesperado. Intenta más tarde.");
+                return;
             }
-
-            const userData = {
-                id: user.id,
-                name: user.nombre,
-                email: user.correo,
-                role: user.role
-            };
-        
-            // 1️⃣ Actualizas el contexto global
-            login(userData);
-        
-            // 2️⃣ Guardas en localStorage
-            localStorage.setItem('user', JSON.stringify(userData));
-        
-            // 3️⃣ Navegas
+    
+            console.log("✅ Login exitoso. Token recibido:", token);
+    
+            localStorage.setItem("token", token);
+    
+            login({
+                email,
+                token
+            });
+    
+            console.log("🔐 Usuario logueado y token almacenado.");
             navigate("/");
-
-        } catch (error) {
-            setError(error.message);
+    
+        } catch (err) {
+            console.error("🚫 Error al iniciar sesión:", err.response?.data || err.message);
+            setError("Credenciales incorrectas o error en el servidor.");
         } finally {
             setLoading(false);
         }
