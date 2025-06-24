@@ -1,14 +1,32 @@
-# Imagen base con Java 17
-FROM eclipse-temurin:17-jdk
+# Multi-stage build para aplicación React/Vite
+FROM node:18-alpine AS build
 
-# Crea un directorio dentro del contenedor
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia el .jar compilado desde tu máquina local al contenedor
-COPY target/*.jar app.jar
+# Copia los archivos de dependencias
+COPY package*.json ./
 
-# Expone el puerto 5173 (usado por Spring Boot)
+# Instala las dependencias (incluyendo devDependencies para el build)
+RUN npm ci
+
+# Copia el código fuente
+COPY . .
+
+# Construye la aplicación
+RUN npm run build
+
+# Segunda etapa: servidor nginx para servir la aplicación
+FROM nginx:alpine
+
+# Copia los archivos construidos desde la etapa anterior
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copia la configuración personalizada de nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expone el puerto 5173
 EXPOSE 5173
 
-# Comando que se ejecuta al iniciar el contenedor
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Comando para iniciar nginx
+CMD ["nginx", "-g", "daemon off;"]
