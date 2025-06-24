@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Eye, EyeOff } from "lucide-react";  // Importar íconos de Lucide
+import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
-
+import { jwtDecode } from "jwt-decode";
 
 const Form = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -19,64 +19,73 @@ const Form = () => {
         return regex.test(email);
     };
 
-    /*const validarPassword = (password) => {
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
-        return passwordRegex.test(password);
-    };*/
-
-    
     const handleLogin = async () => {
-        setError("");
-        setLoading(true);
-    
-        if (!validarEmail(email)) {
-            setError("Correo inválido.");
-            console.warn("❌ Email inválido:", email);
-            setLoading(false);
-            return;
-        }
-    
-        /*if (!validarPassword(password)) {
-            setError("La contraseña debe tener al menos 8 caracteres con un carácter especial.");
-            console.warn("❌ Contraseña no cumple requisitos.");
-            setLoading(false);
-            return;
-        }*/
-    
-        try {
-            const response = await axios.post("http://localhost:8090/auth/login", {
-  correo: email,
-  contrasena: password
-});
+    setError("");
+    setLoading(true);
 
-    
-            const token = response.data.token;
-    
-            if (!token) {
-                console.error("⚠ No se recibió token del backend.");
-                setError("Error inesperado. Intenta más tarde.");
-                return;
-            }
-    
-            console.log("✅ Login exitoso. Token recibido:", token);
-    
-            localStorage.setItem("token", token);
-    
-            login({
-                email,
-                token
-            });
-    
-            console.log("🔐 Usuario logueado y token almacenado.");
-            navigate("/");
-    
-        } catch (err) {
-            console.error("🚫 Error al iniciar sesión:", err.response?.data || err.message);
-            setError("Credenciales incorrectas o error en el servidor.");
-        } finally {
-            setLoading(false);
+    if (!validarEmail(email)) {
+        setError("Correo inválido.");
+        console.warn("❌ Email inválido:", email);
+        setLoading(false);
+        return;
+    }
+
+    try {
+        const response = await axios.post("http://localhost:8090/auth/login", {
+            correo: email,
+            contrasena: password
+        });
+
+        const token = response.data.token;
+
+        if (!token) {
+            console.error("⚠ No se recibió token del backend.");
+            setError("Error inesperado. Intenta más tarde.");
+            return;
         }
-    };
+
+        // ✅ Decodificar el token
+        const decoded = jwtDecode(token);
+        console.log("Token decodificado:", decoded);
+
+        // ✅ Determinar el rol
+        let role = decoded.role || (decoded.authorities && decoded.authorities[0]) || "CLIENTE";
+
+        // Normalizar
+        if (role.toUpperCase().includes("ADMIN")) role = "admin";
+        else if (role.toUpperCase().includes("REPARTIDOR")) role = "delivery";
+        else role = "client";
+
+        const name = decoded.name || decoded.sub || email;
+
+        // ✅ Guardar en localStorage y contexto
+        localStorage.setItem("token", token);
+        login({
+            email,
+            token,
+            role,
+            name
+        });
+
+        console.log("Usuario logueado:", { email, role, name });
+
+        // ✅ Redirigir según rol
+        if (role === "admin") {
+            navigate("/perfil-admin");
+        } else if (role === "delivery") {
+            navigate("/perfil-repartidor");
+        } else {
+            navigate("/perfil");
+        }
+
+    } catch (err) {
+        console.error("🚫 Error al iniciar sesión:", err.response?.data || err.message);
+        setError("Credenciales incorrectas o error en el servidor.");
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     return (
         <div className="bg-white w-full max-w-md ">
@@ -125,15 +134,14 @@ const Form = () => {
             <button
                 onClick={handleLogin}
                 className={`w-full py-3 rounded-xl text-white font-bold border border-blue-950 px-32 text-center 
-                    active:scale-[.98] hover:scale-[1.01] ease-in-out mt-6 ${
-                        (email && password && !loading) ? "bg-blue-950" : "bg-gray-400 cursor-not-allowed opacity-50"
+                    active:scale-[.98] hover:scale-[1.01] ease-in-out mt-6 ${(email && password && !loading) ? "bg-blue-950" : "bg-gray-400 cursor-not-allowed opacity-50"
                     }`}
                 disabled={!email || !password || loading}
             >
                 {loading ? 'Cargando...' : 'Iniciar sesión'}
             </button>
-            
-            <button 
+
+            <button
                 className="w-full active:scale-[.98] active:duration-75 hover:scale-[1.01] ease-in-out border border-blue-950 text-black py-3 rounded-xl text-center font-bold mt-6 flex items-center justify-center gap-2"
                 onClick={() => {
                     alert("Login con Google simulado. En producción redirigiría a autenticación real.");

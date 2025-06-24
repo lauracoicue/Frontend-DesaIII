@@ -20,9 +20,14 @@ import Pedidos from "./admin-opci/Pedidos";
 import PerfilAdmin from "./admin-opci/PerfilAdmin";
 import AsignarPedi from "./admin-opci/AsignarPedi";
 import CrearUsuario from "./admin-opci/CrearUsuario";
+import GestionEntregas from "./admin-opci/GestionEntregas";
 import Perfil_repartidor from "./reparti_opci/Perfil_repartidor";
 import Historial_Entregas from "./reparti_opci/Historial_Entregas";
 import EntregasAsignadas from "./reparti_opci/EntregasAsigna";
+import AsignarRepartidores from "./admin-opci/AsignarRepartidores";
+import EditarPerfil from "./pages/EditarPerfil";
+import MisOrdenes from "./cliente-opci/MisOrdenes";
+import Entregas from "./cliente-opci/Entregas";
 import { HistorialProvider } from "./context/HistorialContext"; // 👈 Agrega esto
 
 
@@ -37,7 +42,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/nosotros" element={<Nosotros />} />
             <Route path="/productos" element={<Productos />} />
-            
+
             {/* Public Routes */}
             <Route path="/log_in" element={
               <PublicRoute>
@@ -60,6 +65,7 @@ const App = () => {
                 <Productos />
               </PublicRoute>
             } />
+            <Route path="/editar-perfil" element={<EditarPerfil />} />
             <Route path="/detalle/:id" element={
               <ProtectedRoute>
                 <DetalleProducto />
@@ -74,19 +80,29 @@ const App = () => {
             {/* Protected historial */}
             <Route path="/historial-compras" element={
               <ProtectedRoute>
-                <Hist_Ventas/>
+                <Hist_Ventas />
+              </ProtectedRoute>
+            } />
+            <Route path="/mis-ordenes" element={
+              <ProtectedRoute>
+                <MisOrdenes />
+              </ProtectedRoute>
+            } />
+            <Route path="/pendientes-entregar" element={
+              <ProtectedRoute>
+                <Entregas />
               </ProtectedRoute>
             } />
             {/* Protected perfil cliente */}
             <Route path="/perfil" element={
               <ProtectedRoute>
-                <Perfil_cliente/>
+                <Perfil_cliente />
               </ProtectedRoute>
             } />
             {/* Protected perfil repartidor */}
             <Route path="/perfil-repartidor" element={
               <ProtectedRoute>
-                <Perfil_repartidor/>
+                <Perfil_repartidor />
               </ProtectedRoute>
             } />
             {/* Admin Routes */}
@@ -99,6 +115,11 @@ const App = () => {
             <Route path="/asignar-pedidos" element={
               <ProtectedRoute requiredRole="admin">
                 <AsignarPedi />
+              </ProtectedRoute>
+            } />
+            <Route path="/gestion-entregas" element={
+              <ProtectedRoute requiredRole="admin">
+                <GestionEntregas />
               </ProtectedRoute>
             } />
             {/* Protected Pedidos */}
@@ -122,19 +143,20 @@ const App = () => {
             {/* Protected edicion de productos */}
             <Route path="/editor-productos" element={
               <ProtectedRoute>
-                <Editor_produc/>
+                <Editor_produc />
               </ProtectedRoute>
             } />
             {/* Protected edicion de productos */}
             <Route path="/historial-entregas" element={
               <ProtectedRoute>
-                <Historial_Entregas/>
+                <Historial_Entregas />
               </ProtectedRoute>
             } />
+            <Route path="/gestion-repartidores" element={<AsignarRepartidores />} />
             {/* Protected edicion de productos */}
             <Route path="/entregas-asignadas" element={
               <ProtectedRoute>
-                <EntregasAsignadas/>
+                <EntregasAsignadas />
               </ProtectedRoute>
             } />
           </Routes>
